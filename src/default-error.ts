@@ -1,5 +1,5 @@
 import { Config } from "../types/default-error-types";
-import { Response } from "../types/response-types";
+import HttpResponse from "../types/response-types";
 
 /**
  * @class DefaultError
@@ -36,18 +36,14 @@ class DefaultError extends Error {
     }
 
     /**
-     * @method toObject
-     * @description Returns an object containing the error status, name and message.
-     * @returns {Response} Returns an object containing the error status, name and message.
+     * @method get information
+     * @description Returns an object containing the error name and message.
+     * @returns {HttpResponse.Error} Returns an object containing the error name and message.
      */
-    public toObject(): Response {
+    public get information(): HttpResponse.Error {
         return {
-            status: this.status,
-            res: {
-                name: this.config.name,
-                message: this.config.msg,
-            },
+            name: this.config.name,
+            message: this.config.msg,
         };
     }
-
 }

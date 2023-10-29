@@ -1,42 +1,53 @@
-import { HttpError } from "../types/error-type";
+import { Config } from "../types/default-error-types";
+import { Response } from "../types/response-types";
 
 /**
  * @class DefaultError
  * @description Default error class
  */
-export default class DefaultError extends Error{
+class DefaultError extends Error {
     readonly status: number;
-    readonly name: string;
-    readonly message: string;
+    private config: Config;
 
     /**
      * @constructor
-     * @param status HTTP status code
-     * @param name Error name
-     * @param msg Error message
+     * @param {number} status HTTP status code
+     * @param {Config} config Configuration object
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status} for more information about HTTP status codes.
      */
-    constructor(status: number|undefined = undefined, 
-        name: string|undefined = undefined, 
-        msg: string|undefined = undefined) {
-        super();
-        this.status = status || 500;
-        this.name = name || "unexpected_error";
-        this.message = msg || "An unexpected error occurred";
+    constructor(status: number = 500,
+        config?: Partial<Config>) {
+        const { name = "DefaultError", msg = "An unexpected error occurred", ...restConfig } = config || {};
+        super(msg);
+        this.status = status;
+        this.config = this.createConfig(name, msg, restConfig);
+    }
+
+    /**
+     * @method createConfig
+     * @description Creates the configuration object for the error.
+     * @param {string} name The name of the error.
+     * @param {string} msg The message of the error.
+     * @param {object} restConfig The rest of the configuration object.
+     * @returns {Config} Returns the configuration object for the error.
+     */
+    private createConfig(name: string, msg: string, restConfig: object): Config {
+        return { name, msg, ...restConfig };
     }
 
     /**
      * @method toObject
      * @description Returns an object containing the error status, name and message.
-     * @returns {HttpError} Returns an object containing the error status, name and message.
+     * @returns {Response} Returns an object containing the error status, name and message.
      */
-    public toObject(): HttpError {
+    public toObject(): Response {
         return {
             status: this.status,
-            information: {
-                name: this.name,
-                message: this.message
-            }
+            res: {
+                name: this.config.name,
+                message: this.config.msg,
+            },
         };
-    };
+    }
+
 }

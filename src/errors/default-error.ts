@@ -1,13 +1,13 @@
-import { Config } from "../types/default-error-types";
-import HttpResponse from "../types/response-types";
+import HttpErrorConfig from "../../types/default-error-types";
+import HttpResponse from "../../types/response-types";
 
 /**
  * @class DefaultError
  * @description Default error class
  */
-class DefaultError extends Error {
+export class DefaultError extends Error {
     readonly status: number;
-    private config: Config;
+    private config: HttpErrorConfig.Default;
 
     /**
      * @constructor
@@ -16,7 +16,7 @@ class DefaultError extends Error {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status} for more information about HTTP status codes.
      */
     constructor(status: number = 500,
-        config?: Partial<Config>) {
+        config?: Partial<HttpErrorConfig.Default>) {
         const { name = "DefaultError", msg = "An unexpected error occurred", ...restConfig } = config || {};
         super(msg);
         this.status = status;
@@ -31,7 +31,7 @@ class DefaultError extends Error {
      * @param {object} restConfig The rest of the configuration object.
      * @returns {Config} Returns the configuration object for the error.
      */
-    private createConfig(name: string, msg: string, restConfig: object): Config {
+    private createConfig(name: string, msg: string, restConfig: object): HttpErrorConfig.Default {
         return { name, msg, ...restConfig };
     }
 

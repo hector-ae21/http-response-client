@@ -19,7 +19,7 @@ namespace HttpErrorConfig {
      * @type Config
      * @description is the type of the configuration object that is passed to the HttpError constructor.
      */
-    type Config = Base;
+    type Default = Base;
 }
 
 export = HttpErrorConfig;

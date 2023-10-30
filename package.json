@@ -2,7 +2,7 @@
     "name": "http-response-client",
     "version": "1.0.0",
     "description": "Package to format a service response and handle errors",
-    "main": "lib/index.js",
+    "main": "lib/index",
     "types": "types/index.d.ts",
     "scripts": {
       "build": "tsc -b"

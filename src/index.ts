@@ -4,7 +4,7 @@ import * as server from "./errors/server";
 import { isHttpError, createError } from "./errors";
 
 export default {
-    httpErrors: {
+    errors: {
         ...client,
         ...redirects,
         ...server,

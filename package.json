@@ -2,7 +2,7 @@
     "name": "http-response-client",
     "version": "1.0.0",
     "description": "Package to format a service response and handle errors",
-    "main": "lib/index.js",
+    "main": "lib/index",
     "types": "types/index.d.ts",
     "scripts": {
       "build": "tsc -b"
@@ -21,8 +21,6 @@
     ],
     "author": "Hector L. Arrechea <hectorlazaroarrechea@gmail.com> (https://github.com/hector-ae21)",
     "license": "MIT",
-    "dependencies": {
-    },
     "devDependencies": {
       "@types/mocha": "^9.1.0",
       "@types/node": "^17.0.21",

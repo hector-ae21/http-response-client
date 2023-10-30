@@ -21,7 +21,7 @@ namespace HttpResponse {
      * @property {number} status HTTP status code
      * @property {ErrorResponse} res Error response object
      */
-    export type Response = {
+    type Default = {
         status: number,
         res: Error
     }

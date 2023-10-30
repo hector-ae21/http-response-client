@@ -46,4 +46,20 @@ class DefaultError extends Error {
             message: this.config.msg,
         };
     }
+
+    /**
+     * @method toObject
+     * @description Returns an object containing the error status, name and message.
+     * @returns {Response} Returns an object containing the error status, name and message.
+     */
+    public toObject(): HttpResponse.Default {
+        return {
+            status: this.status,
+            res: {
+                name: this.config.name,
+                message: this.config.msg,
+            },
+        };
+    }
+
 }

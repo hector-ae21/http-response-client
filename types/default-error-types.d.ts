@@ -6,7 +6,7 @@ namespace HttpErrorConfig {
 
     /**
      * @type Base
-     * @description type for the configuration object.
+     * @description configuration object.
      * @property {string} name Error name
      * @property {string} msg Error message
      */
@@ -17,9 +17,15 @@ namespace HttpErrorConfig {
 
     /**
      * @type Config
-     * @description is the type of the configuration object that is passed to the HttpError constructor.
+     * @description configuration object that is passed to the HttpError constructor.
      */
-    type Default = Base;
+    private type Default = Base;
+
+    /**
+     * @type KnowError
+     * @description configuration object for known errors.
+     */
+    private type KnowError = Omit<Default, "name">;
 }
 
 export = HttpErrorConfig;

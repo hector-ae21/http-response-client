@@ -64,4 +64,4 @@ class DefaultError extends Error {
 
 }
 
-export = DefaultError;
+export default DefaultError;

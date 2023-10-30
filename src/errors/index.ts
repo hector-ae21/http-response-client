@@ -21,5 +21,6 @@ const createError = (status: number, config?: Partial<HttpErrorConfig.Default>):
 }
 
 export {
-    createError, isHttpError
+    createError, 
+    isHttpError
 }

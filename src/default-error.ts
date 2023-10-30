@@ -40,7 +40,7 @@ class DefaultError extends Error {
      * @description Returns an object containing the error name and message.
      * @returns {HttpResponse.Error} Returns an object containing the error name and message.
      */
-    public get information(): HttpResponse.Error {
+    public get response(): HttpResponse.Error {
         return {
             name: this.config.name,
             message: this.config.msg,

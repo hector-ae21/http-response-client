@@ -5,7 +5,7 @@ import HttpResponse from "../../types/response-types";
  * @class DefaultError
  * @description Default error class
  */
-export class DefaultError extends Error {
+class DefaultError extends Error {
     readonly status: number;
     private config: HttpErrorConfig.Default;
 
@@ -63,3 +63,5 @@ export class DefaultError extends Error {
     }
 
 }
+
+export = DefaultError;

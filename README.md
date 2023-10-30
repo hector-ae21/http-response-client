@@ -50,7 +50,7 @@ If you want use any http error that exists in the [HTTP code responses](https://
 
 ```ts
 import responseClient from "http-response-client";
-const error = new responseClient.httpErrors.NotFound();
+const error = new responseClient.errors.NotFound();
 ```
 
 #### Adding a custom message
@@ -59,7 +59,7 @@ If you want add a custom message to the error you can pass the message as a para
 
 ```ts
 import responseClient from "http-response-client";
-const error = new responseClient.httpErrors.NotFound("Custom message");
+const error = new responseClient.errors.NotFound({msg:"Custom message"});
 ```
 
 ### Create a custom error
@@ -68,7 +68,7 @@ If you want create a custom error you can use the function `createError` and pas
 
 ```ts
 import responseClient from "http-response-client";
-const error = responseClient.createError(404, {name: "CustomName", message: "Custom message" });
+const error = responseClient.createError(404, {name: "CustomName", msg: "Custom message" });
 ```
 
 ### Verify if an error is an http error
@@ -77,7 +77,7 @@ If you want verify if an error is an http error you can use the function `isHttp
 
 ```ts
 import responseClient from "http-response-client";
-const error = new responseClient.httpErrors.NotFound();
+const error = new responseClient.errors.NotFound();
 const isHttpError = responseClient.isHttpError(error);
 ```
 

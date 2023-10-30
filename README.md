@@ -9,6 +9,12 @@ Package to format service request in Moodle web service format
 - [http-response-client](#http-response-client)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
+  - [Examples](#examples)
+    - [Create an http error](#create-an-http-error)
+      - [Existent http error](#existent-http-error)
+      - [Adding a custom message](#adding-a-custom-message)
+    - [Create a custom error](#create-a-custom-error)
+    - [Verify if an error is an http error](#verify-if-an-error-is-an-http-error)
   - [Docs](#docs)
   - [Issues](#issues)
     - [🐛 Bugs](#-bugs)
@@ -31,6 +37,47 @@ Installation is done using the
 
 ```console
 $ npm install http-response-client
+```
+## Examples
+
+### Create an http error
+
+#### Existent http error
+
+If you want use any http error that exists in the [HTTP code responses](https://developer.mozilla.org/es/docs/Web/HTTP/Status) you can use the method `httpErrors.${error}`.
+
+
+```ts
+import responseClient from "http-response-client";
+const error = new responseClient.httpErrors.NotFound();
+```
+
+#### Adding a custom message
+
+If you want add a custom message to the error you can pass the message as a parameter to the class.
+
+```ts
+import responseClient from "http-response-client";
+const error = new responseClient.httpErrors.NotFound("Custom message");
+```
+
+### Create a custom error
+
+If you want create a custom error you can use the function `createError` and pass the status code, name and the message as parameters.
+
+```ts
+import responseClient from "http-response-client";
+const error = responseClient.createError(404, {name: "CustomName", message: "Custom message" });
+```
+
+### Verify if an error is an http error
+
+If you want verify if an error is an http error you can use the function `isHttpError` and pass the error as a parameter.
+
+```ts
+import responseClient from "http-response-client";
+const error = new responseClient.httpErrors.NotFound();
+const isHttpError = responseClient.isHttpError(error);
 ```
 
 ## Docs

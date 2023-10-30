@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Package to format a service response and handle errors",
     "main": "lib/index",
-    "types": "types/index.d.ts",
+    "types": "lib/index.d.ts",
     "scripts": {
       "build": "tsc -b"
     },

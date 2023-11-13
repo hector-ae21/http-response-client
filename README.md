@@ -81,6 +81,17 @@ const error = new responseClient.errors.NotFound();
 const isHttpError = responseClient.isHttpError(error);
 ```
 
+### Using middleware for express
+
+If you want use the middleware for express you can use the function `middlewares` and pass the error as a parameter and response.
+
+```ts
+import responseClient from "http-response-client";
+this.app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
+    responseClient.middlewares.errorCatcher(err,res);
+});
+```
+
 ## Docs
 
 [**HTTP code responses**](https://developer.mozilla.org/es/docs/Web/HTTP/Status)

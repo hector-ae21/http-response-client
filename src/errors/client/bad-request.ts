@@ -18,3 +18,4 @@ class BadRequest extends DefaultError {
 }
 
 export default BadRequest;
+

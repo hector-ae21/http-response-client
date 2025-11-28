@@ -1,3 +1,31 @@
+# Development files
 .vscode
 .gitattributes
 src
+tsconfig.json
+.github
+
+# Documentation (keep only essential)
+CONTRIBUTING.md
+
+# Tests
+test
+*.test.ts
+*.spec.ts
+
+# CI/CD
+.github/
+
+# Git
+.git
+.gitignore
+
+# npm
+.npmignore
+
+# Node
+node_modules
+npm-debug.log*
+
+# Build artifacts
+*.tsbuildinfo

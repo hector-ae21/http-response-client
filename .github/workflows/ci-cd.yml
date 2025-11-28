@@ -1,0 +1,142 @@
+name: Publish to NPM
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - 'types/**'
+      - 'package.json'
+
+jobs:
+  publish:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Get current version
+        id: current
+        run: |
+          VERSION=$(node -p 'require("./package.json").version')
+          NAME=$(node -p 'require("./package.json").name')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "📦 Package: $NAME"
+          echo "🏷️  Version: $VERSION"
+
+      - name: Check for changes in src folder
+        id: src-changes
+        run: |
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+          echo "Changed files in last commit:"
+          echo "$CHANGED_FILES"
+          
+          if echo "$CHANGED_FILES" | grep -q "^src/\|^types/"; then
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+            echo "✅ Changes detected in src/ or types/ folder"
+          else
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+            echo "⏭️  No changes in src/ or types/ folder"
+          fi
+
+      - name: Check if version already published
+        id: version-check
+        run: |
+          PUBLISHED=$(npm view ${{ steps.current.outputs.name }}@${{ steps.current.outputs.version }} version 2>/dev/null || echo "null")
+          if [ "$PUBLISHED" = "${{ steps.current.outputs.version }}" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "⚠️  Version ${{ steps.current.outputs.version }} already exists on npm"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "✅ Version ${{ steps.current.outputs.version }} is new"
+          fi
+
+      - name: Create git tag
+        if: |
+          steps.version-check.outputs.exists == 'false' &&
+          steps.src-changes.outputs.has-changes == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          TAG="v${{ steps.current.outputs.version }}"
+          echo "Creating tag: $TAG"
+          
+          git fetch --tags --force
+          
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "⚠️  Tag $TAG already exists locally"
+          elif git ls-remote --tags origin | grep -q "refs/tags/$TAG"; then
+            echo "⚠️  Tag $TAG already exists in remote"
+          else
+            git tag -a "$TAG" -m "Release $TAG"
+            git push origin "$TAG"
+            echo "✅ Tag $TAG created and pushed"
+          fi
+
+      - name: Publish to NPM
+        if: |
+          steps.version-check.outputs.exists == 'false' &&
+          steps.src-changes.outputs.has-changes == 'true'
+        run: |
+          echo "🚀 Publishing ${{ steps.current.outputs.name }}@${{ steps.current.outputs.version }} to npm..."
+          npm publish
+          echo "✅ Successfully published to npm!"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Skip publish - No src changes
+        if: steps.src-changes.outputs.has-changes == 'false'
+        run: echo "⏭️  Skipping publish - No changes in src/ or types/ folder"
+
+      - name: Skip publish - Version exists
+        if: |
+          steps.version-check.outputs.exists == 'true' &&
+          steps.src-changes.outputs.has-changes == 'true'
+        run: echo "⏭️  Skipping publish - Version ${{ steps.current.outputs.version }} already exists on npm"
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "# 📦 npm Publish Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Package:** ${{ steps.current.outputs.name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.current.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.src-changes.outputs.has-changes }}" == "false" ]; then
+            echo "⏭️ **Status:** Skipped - No changes in src/ or types/ folder" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.version-check.outputs.exists }}" == "true" ]; then
+            echo "⏭️ **Status:** Skipped - Version already exists on npm" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Status:** Published successfully to npm!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "🔗 **View on npm:** https://www.npmjs.com/package/${{ steps.current.outputs.name }}" >> $GITHUB_STEP_SUMMARY
+          fi
+

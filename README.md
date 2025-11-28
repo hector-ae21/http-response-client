@@ -1,6 +1,11 @@
 # http-response-client
 
-Package to format service request in Moodle web service format
+[![CI/CD Pipeline](https://github.com/hector-ae21/http-response-client/workflows/CI/CD%20Pipeline/badge.svg)](https://github.com/hector-ae21/http-response-client/actions)
+[![npm version](https://badge.fury.io/js/http-response-client.svg)](https://www.npmjs.com/package/http-response-client)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/node/v/http-response-client.svg)](https://nodejs.org)
+
+Package to format service responses and handle HTTP errors for Express.js applications.
 
 ## Table of Contents
 
@@ -8,6 +13,7 @@ Package to format service request in Moodle web service format
 
 - [http-response-client](#http-response-client)
   - [Table of Contents](#table-of-contents)
+  - [Features](#features)
   - [Installation](#installation)
   - [Examples](#examples)
     - [Create an http error](#create-an-http-error)
@@ -15,13 +21,28 @@ Package to format service request in Moodle web service format
       - [Adding a custom message](#adding-a-custom-message)
     - [Create a custom error](#create-a-custom-error)
     - [Verify if an error is an http error](#verify-if-an-error-is-an-http-error)
+    - [Using middleware for express](#using-middleware-for-express)
+  - [CI/CD Pipeline](#cicd-pipeline)
   - [Docs](#docs)
   - [HTTP Code Responses List](#http-code-responses-list)
+  - [Changelog](#changelog)
+  - [Contributing](#contributing)
   - [Issues](#issues)
     - [🐛 Bugs](#-bugs)
     - [💡 Feature Requests](#-feature-requests)
   - [Contributors](#contributors)
   - [LICENSE](#license)
+
+## Features
+
+- ✅ **Comprehensive HTTP Error Handling**: Pre-built error classes for all standard HTTP status codes (3xx, 4xx, 5xx)
+- 🎯 **TypeScript Support**: Full type definitions included for enhanced development experience
+- 🔧 **Custom Error Creation**: Create custom HTTP errors with specific status codes and messages
+- 🛡️ **Error Validation**: Built-in function to verify if an error is an HTTP error
+- 🚀 **Express Middleware**: Ready-to-use middleware for automatic error handling in Express.js
+- 📦 **Lightweight**: Minimal dependencies, focused on core functionality
+- 🔄 **ES Modules**: Modern JavaScript module system support
+- ⚙️ **CI/CD Ready**: Automated testing, building, and publishing pipeline
 
 ## Installation
 
@@ -92,6 +113,42 @@ this.app.use((err: Error, req: Request, res: Response, next: NextFunction): void
 });
 ```
 
+## CI/CD Pipeline
+
+This project uses GitHub Actions for automated publishing to npm.
+
+### 🚀 Automated Publishing
+When you push changes to the `master` branch, the workflow automatically:
+
+1. **Checks for Changes**: Verifies if changes were made to `src/` or `types/` directories
+2. **Version Check**: Confirms the version in `package.json` hasn't been published yet
+3. **Build**: Compiles TypeScript to JavaScript and generates type definitions
+4. **Create Git Tag**: Automatically creates a version tag (e.g., `v2.0.0`)
+5. **Publish to npm**: Publishes the package to npm registry
+
+### ⚙️ Configuration Required
+To use automated publishing, you need to configure the `NPM_TOKEN` secret:
+1. Go to your npm account and create an access token
+2. In GitHub: Settings → Secrets and variables → Actions
+3. Add new repository secret: `NPM_TOKEN` with your npm token
+
+### 📋 Publishing Conditions
+The package will only be published if **all** of the following are true:
+- Push is to the `master` branch
+- Changes detected in `src/**` or `types/**` or `package.json`
+- Version in `package.json` doesn't exist on npm yet
+
+### 📊 Workflow Summary
+After each run, a detailed summary is generated showing:
+- Package name and version
+- Publish status (published, skipped, or failed)
+- Link to the npm package (if published)
+
+### 🔄 Workflow Triggers
+The workflow runs on:
+- Push to `master` branch
+- Changes to `src/**`, `types/**`, or `package.json`
+
 ## Docs
 
 [**HTTP code responses**](https://developer.mozilla.org/es/docs/Web/HTTP/Status)
@@ -147,6 +204,20 @@ this.app.use((err: Error, req: Request, res: Response, next: NextFunction): void
 | 508 | LoopDetected | El servidor detectó un bucle infinito mientras procesaba una solicitud con "Depth: infinity". Esto se proporciona para compatibilidad con antiguos clientes WebDAV que no soportan el encabezado Depth en "If" para "copy" y "move" o para clientes que crean ciclos de referencias infinitas.
 | 510 | NotExtended | Se requiere más extensión para cumplir con la solicitud. |
 | 511 | NetworkAuthenticationRequired | El cliente necesita autenticarse para obtener acceso a la red. |
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes to this project.
+
+### Latest Release: v2.0.0
+- ✨ Automated npm publishing with GitHub Actions
+- 🏷️ Automatic git tag creation for releases
+- 🔄 Smart publishing (only on version changes and source code updates)
+- 📝 Comprehensive changelog and contributing documentation
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
 
 ## Issues
 
